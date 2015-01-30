@@ -1,0 +1,110 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <!--<script type="text/javascript" src="js/prueba.js"></script>-->
+    <link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.4.5.min.css"/>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script>
+            function onLoad(){
+                document.addEventListener("deviceready",onDeviceReady,false);
+            }
+
+            function onDeviceReady(){
+
+            }
+
+            function onError(){
+                navigator.notification.alert("Hubo un error en la app");
+            }
+
+            function crear(){
+                $.mobile.navigate("#crearUsu");
+                navigator.notification.alert("Creando usuario");
+            }
+
+            function guardar(){
+                //alert("Estoy en guardar");
+                var nombre1 = $("#nombre").val();
+                var pass1 = $("#pass").val();
+                //var nombre=document.getElementById("nombre").val();
+                //var pass1=document.getElementById("pass").val();
+                window.localStorage.setItem(0,nombre1);
+                window.localStorage.setItem(1,pass1);
+                //var mostrar = window.localStorage.getItem(0);
+                alert("Usuario guardado");
+                 $.mobile.navigate("#login");
+            }
+
+            function bienvenida(){
+                var nombre= $("#nombrelog").val();
+                var pass= $("#passlog").val();
+                if(window.localStorage.getItem(0)==nombre && window.localStorage.getItem(1)==pass){
+                    $.mobile.navigate("#bienvenida");
+                    document.getElementById("texto").innerHTML="Bienvenido "+nombre+pass;
+                }
+            }
+        </script>
+</head>
+<body onload="onLoad()">
+<!-- Comienzo de primera pagina -->
+<div data-role="page" id="login">
+    <div data-role="header">
+        <h1>Inicio</h1>
+    </div>
+    <div role="main" class="ui-content">
+        <p>Ingrese su nombre:<input type="text" id="nombrelog"/><br>
+            Ingrese su password:<input type="password" id="passlog"/>
+            <input type="submit" onclick="bienvenida()" id="bot" class="ui-btn"/></p>
+        <button onclick="crear()">Crear usuario</button>
+    </div>
+    <div data-role="footer">
+        <h4>Pie de pag</h4>
+    </div><!-- /footer -->
+</div>
+
+    <!-- Comienzo de segunda pagina -->
+    <div data-role="page" id="crearUsu">
+
+        <div data-role="header">
+            <h1>Crear usuario</h1>
+        </div><!-- /header -->
+
+        <div role="main" class="ui-content">
+            <p>Usuario:<input type="text" id="nombre" required/><br>
+                Password:<input type="password" id="pass" required/>
+                Confirme su password:<input type="password" id="passconf"/></p>
+            <button onclick="guardar()">Guardar usuario</button>
+            <!--<p><a href="#login">Volver</a></p>-->
+        </div><!-- /content -->
+
+        <div data-role="footer">
+            <h4>Page Footer</h4>
+        </div><!-- /footer -->
+    </div><!-- /page -->
+
+<!-- Comienzo de tercera pagina -->
+<div data-role="page" id="bienvenida">
+
+    <div data-role="header">
+        <h1>Bienvenido</h1>
+    </div><!-- /header -->
+
+    <div role="main" class="ui-content">
+        <p id="texto">Conexión exitosa.</p>
+        <p><a href="#login">Volver</a></p>
+    </div><!-- /content -->
+
+    <div data-role="footer">
+        <h4>Page Footer</h4>
+    </div><!-- /footer -->
+</div><!-- /page -->
+</body>
+</html>

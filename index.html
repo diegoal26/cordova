@@ -1,0 +1,188 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <!--<script type="text/javascript" src="js/prueba.js"></script>-->
+    <link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.4.5.min.css"/>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script>
+            var turno=0;
+            var content;
+            var combinacion;
+            var ganador;
+            function onLoad(){
+                document.addEventListener("deviceready",onDeviceReady,false);
+            }
+
+            function onDeviceReady(){
+                content = new Array();
+                combinacion = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+                for(var l = 0; l <= 8; l++){
+                    content[l]='';
+                }
+
+            }
+
+            function iniciar(){
+                var nombre1 = $("#user1").val();
+                var nombre = $("#user2").val();
+                if(nombre1==""){
+                    alert("Debe completar este campo");
+                    $("#user1").focus();
+                }else{
+                    $.mobile.navigate("#juego");
+                    //navigator.notification.alert("Juego..");
+                    document.getElementById("texto").innerHTML="Juega "+nombre1;
+                }
+            }
+
+            function canvasClicked(canvasNumber){
+                var theCanvas = "canvas"+canvasNumber;
+                var c = document.getElementById(theCanvas);
+                //alert(theCanvas);
+                var ctx = c.getContext("2d");
+                if(turno%2==0){
+                    ctx.beginPath();
+                    ctx.moveTo(10,10);
+                    ctx.lineTo(40,40);
+                    ctx.moveTo(40,10);
+                    ctx.lineTo(10,40);
+                    ctx.stroke();
+                    ctx.closePath();
+                    var nombre = $("#user2").val();
+                    document.getElementById("texto").innerHTML="Juega "+nombre;
+                    content[canvasNumber-1] = 'X';
+                }else{
+                    var nombre = $("#user1").val();
+                    document.getElementById("texto").innerHTML="Juega "+nombre;
+                    ctx.beginPath();
+                    ctx.arc(25,25,20,0,Math.PI*2,true);
+                    ctx.stroke();
+                    ctx.closePath();
+                    content[canvasNumber-1] = 'O';
+                }
+                turno++;
+                checkWinner(content[canvasNumber-1]);
+            }
+
+            function checkWinner(symbol){
+                for(var a = 0; a < combinacion.length; a++){
+                    if(content[combinacion[a][0]]==symbol&&content[combinacion[a][1]]== symbol&&content[combinacion[a][2]]==symbol){
+                        alert(symbol+ " Ganó!");
+                        ganador = symbol;
+                    }
+                }
+            }
+
+            function guardar(){
+                alert(ganador);
+                var nombre;
+                var puntos=0;
+                if (ganador == 'X'){
+                   nombre = $("#user1").val();
+                }else{
+                   nombre = $("#user2").val();
+                }
+
+                if (window.localStorage.getItem(nombre)==null){
+                    window.localStorage.setItem(nombre,1);
+                }else{
+                    puntos = window.localStorage.getItem(nombre);
+                    puntos++;
+                    window.localStorage.setItem(nombre,puntos);
+                }
+                //var nombre=document.getElementById("nombre").val();
+                var mostrar = window.localStorage.getItem(nombre);
+                alert(mostrar);
+                 $.mobile.navigate("#inicio");
+            }
+
+            function ranking(){
+               $.mobile.navigate("#ranking");
+               var usuario1= $("#user1").val();
+               var usuario2= $("#user2").val();
+               document.getElementById("rank1").innerHTML = "Puntaje "+usuario1+": "+window.localStorage.getItem(usuario1);
+               document.getElementById("rank2").innerHTML = "Puntaje "+usuario2+": "+window.localStorage.getItem(usuario2);
+            }
+            function bienvenida(){
+                var nombre= $("#nombrelog").val();
+                var pass= $("#passlog").val();
+                if(window.localStorage.getItem(0)==nombre && window.localStorage.getItem(1)==pass){
+                    $.mobile.navigate("#bienvenida");
+                    document.getElementById("texto").innerHTML="Bienvenido "+nombre+pass;
+                }
+            }
+        </script>
+</head>
+<body onload="onLoad()">
+<!-- Comienzo de primera pagina -->
+<div data-role="page" id="inicio">
+    <div data-role="header">
+        <h1>TA TE TI</h1>
+    </div>
+    <div role="main" class="ui-content">
+        <p>Usuario 1:<input type="text" id="user1"/><br>
+           Usuario 2:<input type="text" id="user2"/>
+        </p>
+        <button onclick="iniciar()">Jugar</button>
+        <button onclick="ranking()">Ver ranking</button>
+    </div>
+    <div data-role="footer">
+        <h4>Pie de pag</h4>
+    </div><!-- /footer -->
+</div>
+
+    <!-- Comienzo de segunda pagina -->
+    <div data-role="page" id="juego">
+
+        <div data-role="header">
+            <h1>Crear usuario</h1>
+        </div><!-- /header -->
+
+        <div role="main" class="ui-content">
+            <p id="texto">Jugador</p>
+            <p><canvas id = "canvas1"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(1)"></canvas>
+            <canvas id = "canvas2"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(2)"></canvas>
+            <canvas id = "canvas3"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(3)"></canvas></p>
+            <p><canvas id = "canvas4"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(4)"></canvas>
+            <canvas id = "canvas5"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(5)"></canvas>
+            <canvas id = "canvas6"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(6)"></canvas></p>
+            <p><canvas id = "canvas7"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(7)"></canvas>
+            <canvas id = "canvas8"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(8)"></canvas>
+            <canvas id = "canvas9"  width="50" height="50" style="border:1px solid black" onclick="canvasClicked(9)"></canvas></p>
+            <button onclick="guardar()">Guardar usuario</button>
+            <!--<p><a href="#login">Volver</a></p>-->
+        </div><!-- /content -->
+
+        <div data-role="footer">
+            <h4>Page Footer</h4>
+        </div><!-- /footer -->
+    </div><!-- /page -->
+
+<!-- Comienzo de tercera pagina -->
+<div data-role="page" id="ranking">
+
+    <div data-role="header">
+        <h1>Ranking de jugadores</h1>
+    </div><!-- /header -->
+
+    <div role="main" class="ui-content">
+        <p id="rank1">Puntaje.</p>
+        <p id="rank2">Puntaje.</p>
+        <p><a href="#inicio">Volver</a></p>
+    </div><!-- /content -->
+
+    <div data-role="footer">
+        <h4>Page Footer</h4>
+    </div><!-- /footer -->
+</div><!-- /page -->
+</body>
+</html>

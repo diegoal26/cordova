@@ -1,0 +1,110 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/prueba.js"></script>
+        <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css"/>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script>
+            function onLoad(){
+                document.addEventListener("deviceready",onDeviceReady,false);
+            }
+
+            function onDeviceReady(){
+                alert('probando');
+            }
+            function takePhoto(){
+                navigator.camera.getPicture(onCameraSuccess, onCameraError, {quality: 50, destinationType: Camera.DestinationType.FILE_URI});
+            }
+
+            function capturePhoto() {
+                // Take picture using device camera and retrieve image as base64-encoded string
+                navigator.camera.getPicture(onPhotoDataSuccess, onError, { quality: 50,
+                destinationType: Camera.DestinationType.DATA_URL, sourceType: 1, saveToPhotoAlbum: true });
+            }
+
+            function onPhotoDataSuccess(imageData){
+                // Get image handle
+                var smallImage = document.getElementById("img1");
+                // Unhide image elements
+                smallImage.style.display = 'block';
+
+              // Show the captured photo
+              // The in-line CSS rules are used to resize the image
+              smallImage.src = "data:image/jpeg;base64," + imageData;
+            }
+
+            function onCameraSuccess(imageURL){
+                navigator.notification.alert("onCameraSuccess: " + imageURL);
+                //alert("onCameraSuccess: " + imageURL);
+            }
+
+            function onCameraError(){
+                navigator.notification.alert("onCameraError");
+            }
+
+            function onError(){
+                navigator.notification.alert("Hubo un error en la app");
+            }
+        </script>
+    </head>
+    <body onload="onLoad()">
+        <div data-role="page" id="login">
+        <div data-role="header">
+		    <h1>Prueba</h1>
+	    </div>
+            
+        <div role="main" class="ui-content">
+        <p>Ingrese su nombre:<input type="text" id="nombre"/><br>
+        Ingrese su mail:<input type="text" id="email"/>
+            <img src="img/logo.png" id="img1" alt="foto" height="150" width="100">
+        <button onclick="capturePhoto()">Foto</button>
+        <input type="submit" id="bot" class="ui-btn" onclick="capturePhoto()"/></p>
+	</div>
+        <div data-role="footer">
+		<h4>Pie de pag</h4>
+	</div><!-- /footer -->
+        </div>
+    
+    <!-- Comienzo de segunda pagina -->
+        <div data-role="page" id="incorrecto">
+
+	<div data-role="header">
+		<h1>Error</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<p>Error. No se pudo hacer el login.</p>
+		<p><a href="#login">Volver</a></p>
+	</div><!-- /content -->
+
+	<div data-role="footer">
+		<h4>Page Footer</h4>
+	</div><!-- /footer -->
+        </div><!-- /page -->
+        
+        <!-- Comienzo de tercera pagina -->
+        <div data-role="page" id="correcto">
+
+	<div data-role="header">
+		<h1>Correcto</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<p>Conexión exitosa.</p>
+		<p><a href="#login">Volver</a></p>
+	</div><!-- /content -->
+
+	<div data-role="footer">
+		<h4>Page Footer</h4>
+	</div><!-- /footer -->
+        </div><!-- /page -->
+    </body>
+</html>
